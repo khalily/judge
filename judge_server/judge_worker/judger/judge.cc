@@ -17,23 +17,19 @@ namespace oj {
 
 ReturnCode Judge::Run() {
   pid_t pid;
-  // int fd_err[2];
-  // if (pipe2(fd_err, O_NONBLOCK))
-  //   printError("run :pipe2(fd_err) failure");
+
   if ((pid = vfork()) < 0) {
-    // close(fd_err[0]);
-    // close(fd_err[1]);
+
     printError("vfork error");
   }
   if (pid == 0) {               // child process
-    // close(fd_err[0]);
+
     SetResourceLimit();
     printf("%ld\n", cmd_args_.size());
     for (int i = 0; i != cmd_args_.size(); ++i) {
       printf("cmd_args[%d] : %s\n", i, cmd_args_[i]);
     }
     SetIOEnv();
-    // printf("SetIOEnv finish \n");
     setRunner();
 
     if (execute_condtion_.trace) {
@@ -44,12 +40,7 @@ ReturnCode Judge::Run() {
 
     printError("execvp error");
   } else {                      // parent process
-    // char errbuffer[1000] = { 0 };
-    // close(fd_err[1]);
-    // int r = read(fd_err[0], errbuffer, 900);
-    // if (r != 0) {
-    //   printf("child error: %s\n", errbuffer);
-    // }
+
     if (execute_condtion_.trace) {
       return TraceLoop(pid);
     }
@@ -72,32 +63,14 @@ void Judge::SetResourceLimit() {
   if (setrlimit(RLIMIT_AS, &rl)) {
     printError("rlimit stack error");
   }
-
-  // struct itimerval p_realt;
-  // p_realt.it_interval.tv_sec = time_limit / 1000 + 3;
-  // p_realt.it_interval.tv_usec = 0;
-  // p_realt.it_value = p_realt.it_interval;
-  // if (setitimer(ITIMER_REAL, &p_realt, (struct itimerval *) 0) == -1) {
-  //   printf("timer error\n");
-  // }
 }
 
 void Judge::SetIOEnv() {
-  // int input_fd = open(&ioFileno_.input_path[times][0],
-  //                     O_RDONLY);
-  // if (input_fd < 0) {
-  //   printError("open infile error");
-  // }
+
   if (dup2(ioFileno_.right_input_fileno, 0) == -1) {
     printError("dup2 infile error");
   }
 
-  // int output_fd = open(&ioFileno_.output_path[times][0],
-  //                      O_CREAT | O_RDWR,
-  //                      0666);
-  // if (output_fd < 0) {
-  //   printError("open outfile error");
-  // }
   if (dup2(ioFileno_.user_output_fileno, 1) == -1) {
     printError("dup2 outfile error");
   }
@@ -142,7 +115,7 @@ void Judge::WaitExit(pid_t pid) {
     else
       results_.judge_result = kAC;
   }
-  // results_.run_id = execute_condtion_.run_id;
+
 }
 
 ReturnCode Judge::TraceLoop(pid_t pid) {
@@ -159,7 +132,6 @@ ReturnCode Judge::TraceLoop(pid_t pid) {
       printError("wait4 WSTOPPED error");
     }
     if (WIFEXITED(status)) {
-      // printf("exit\n");
       break;
     } else if (WSTOPSIG(status) != SIGTRAP) {
       ptrace(PTRACE_KILL, pid, NULL, NULL);

@@ -114,14 +114,4 @@ void JudgeServer::run() {
   }
 }
 
-void JudgeServer::startWorker() {
-  for (int i = 0; i < worker_num_; ++i) {
-    auto judgeWorker = new JudgeWorker(sock_back_addr_);
-    workers_.push_back(judgeWorker);
-    threadPool_.Spwan(bind(&JudgeWorker::run, judgeWorker));
-    log_ << "start JudgeWorker " << i <<log_.endl();
-  }
-  // threadpool.JoinAll();
-}
-
 }

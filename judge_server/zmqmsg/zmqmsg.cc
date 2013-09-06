@@ -59,7 +59,6 @@ bool ZmqMsg::sendMsg(void* sock, string strData, int flag) {
 
 bool ZmqMsg::sendMsg(void* sock, int flag) {
   int size = zmq_sendmsg(sock, &msg_, flag);
-  // cout << size << endl;
   if (size == -1)
     return false;
   return true;
@@ -101,7 +100,6 @@ bool ZmqMutiMsg::recvMutiMsg(void *sock) {
   int64_t more = 1;
   size_t more_size = sizeof(more);
   while (more) {
-    // cout << "more:" << more <<endl;
     ZmqMsg* msg = new ZmqMsg();
     if (!msg->recvMsg(sock, ZMQ_RCVMORE)) {
         return false;

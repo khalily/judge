@@ -10,8 +10,7 @@ ReturnCode Checker::Run() {
     return kError;
   }
   MemoryMap();
-  printf("userout_ : %s\n", userout_);
-  printf("rightout_ : %s\n", rightout_);
+
   if (EqualStr(userout_, rightout_)) {
     UnMemoryMap();
     result_ = kAC;
@@ -21,7 +20,6 @@ ReturnCode Checker::Run() {
   if (IsPE() == true) {
     result_ = kPE;
   } else {
-    printf("no PE\n");
     result_ = kWA;
   }
   UnMemoryMap();
@@ -75,8 +73,6 @@ ReturnCode Checker::CheckOutLength() {
   //        rightout_len_,
   //        userout_len_);
   if (userout_len_ != rightout_len_) {
-    printf("userout_len_: %d\n", userout_len_);
-    printf("rightout_len_: %d\n", rightout_len_);
     result_ = kWA;
     return kError;
   }

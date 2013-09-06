@@ -17,7 +17,6 @@ class Judger
       log_(log)
       {
         results_.run_id = run_id;
-        log_ << "why?  run_id: " << results_.run_id << log_.endl();
         source_file_path_.reserve(15);
         execute_file_path_.reserve(15);
         compile_error_file_.reserve(15);
@@ -33,7 +32,7 @@ class Judger
   }
   bool execute(const ExecuteCondtion& execute_condtion,
                const IOFileno& ioFileno);
-  // void checkResults(const IOFileno& ioFileno);
+
   Results getResults() {
     return results_;
   }
@@ -62,16 +61,16 @@ class Judger
   bool hasData(const char* filepath) {
     std::ifstream input(filepath);
     input.seekg(0, std::ios::end);
-    int length = input.tellg();
-    log_ << "length: " << length << log_.endl();
+    // int length = input.tellg();
+
     if (input.tellg() > 0)
       return true;
     return false;
   }
-  // std::string source_file_path_;
+
 
   std::vector<char> source_file_path_;
-  // std::string execute_file_path_;
+
   std::vector<char> execute_file_path_;
   std::vector<char> compile_error_file_;
   std::vector<char> vec_cmd_;
@@ -79,9 +78,6 @@ class Judger
   std::string right_output_file_;
   Results results_;
   utils::Log &log_;
-  CmdArgs cmd_args_;
-  CallLimit call_limit_;
-  // uint32_t run_id_;
 };
 }
 #endif

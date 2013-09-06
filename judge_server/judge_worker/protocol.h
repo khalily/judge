@@ -222,19 +222,13 @@ class FileManger : public std::vector<File*> {
   }
 
   void closeAll() {
-    // if (!isClosed) {
     printf("closeAll\n");
       for (auto iter = begin(); iter != end(); ++iter) {
-        // printf("fileno: %d\n", (*iter)->fileno());
         delete *iter;
-        // clear();
       }
       clear();
-    // }
-    // isClosed = true;
   }
  private:
-  // bool isClosed;
 };
 
 

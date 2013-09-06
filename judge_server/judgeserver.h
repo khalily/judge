@@ -23,7 +23,6 @@ class JudgeServer
  private:
   bool init();
   void destroy();
-  void startWorker();
   const std::string sock_front_addr_;
   const std::string sock_back_addr_;
   int worker_num_;

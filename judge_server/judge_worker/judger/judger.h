@@ -3,7 +3,8 @@
 
 #include <fstream>
 #include <string>
-#include <vector>
+// #include <vector>
+#include <boost/format.hpp>
 
 #include "../../log.hpp"
 #include "../protocol.h"
@@ -28,7 +29,7 @@ class Judger
                        // uint32_t code_type,
                        const char* work_dir_path) { }
   virtual bool compile() {
-    return false;
+    return true;
   }
   bool execute(const ExecuteCondtion& execute_condtion,
                const IOFileno& ioFileno);
@@ -61,7 +62,6 @@ class Judger
   bool hasData(const char* filepath) {
     std::ifstream input(filepath);
     input.seekg(0, std::ios::end);
-    // int length = input.tellg();
 
     if (input.tellg() > 0)
       return true;
@@ -69,11 +69,11 @@ class Judger
   }
 
 
-  std::vector<char> source_file_path_;
+  std::string source_file_path_;
 
-  std::vector<char> execute_file_path_;
-  std::vector<char> compile_error_file_;
-  std::vector<char> vec_cmd_;
+  std::string execute_file_path_;
+  std::string compile_error_file_;
+  std::string vec_cmd_;
   std::string user_output_file_;
   std::string right_output_file_;
   Results results_;

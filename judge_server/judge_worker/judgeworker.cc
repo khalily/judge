@@ -6,6 +6,9 @@
 #include <iostream>             // test
 #include <fstream>
 #include <vector>
+
+#include <boost/format.hpp>
+
 #include <zmq.h>
 #include <jsoncpp/json.h>
 
@@ -92,12 +95,12 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
   RunConfigure run_configure;
   parseData(msg, run_configure);
 
-  vector<char> work_dir_path(15);
+  string work_dir_path;
   if (!buildEnv(run_configure.run_id, work_dir_path)) {
     log_ << "[error] buildEnv fail" << log_.endl();
     return false;
   }
-  log_ << "buildEnv " << &work_dir_path[0] << " sucessful" << log_.endl();
+  log_ << "buildEnv " << work_dir_path << " sucessful" << log_.endl();
 
   JudgeofType judgeoftype;
   Judger *judger =
@@ -113,7 +116,6 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
     log_ << "compile error" << log_.endl();
     return true;
   }
-  // log_ << "why?" << log_.endl();
   ExecuteCondtion execute_condtion {
     run_configure.time_limit,
     run_configure.memory_limit,
@@ -133,7 +135,6 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
       results = judger->getResults();
       printResults(results);
       results.run_id = run_configure.run_id;
-      log_ << "run_id" << results.run_id << log_.endl();
       file_manager_.closeAll();
       return true;
     }
@@ -183,7 +184,7 @@ bool JudgeWorker::init() {
 }
 
 bool JudgeWorker::buildEnv(uint32_t run_id,
-                           vector<char>& work_dir_path) {
+                           string& work_dir_path) {
   if (mkdir(temp_dir_.c_str(), 0777) == -1) {
     if (errno != EEXIST) {
       log_ << "[error] mkdir " << temp_dir_ << " fail: "<< utils::strErr() << log_.endl();
@@ -193,16 +194,16 @@ bool JudgeWorker::buildEnv(uint32_t run_id,
 
 
   // work_dir_path
-  sprintf(&work_dir_path[0],
-          "%s/%d",
-          temp_dir_.c_str(),
-          run_id);
-  while (mkdir(&work_dir_path[0], 0777) == -1) {
+
+  work_dir_path = (boost::format("%s/%d") %
+                   temp_dir_.c_str() %
+                   run_id).str();
+  while (mkdir(work_dir_path.c_str(), 0777) == -1) {
     if (errno != EEXIST) {
-      log_ << "[error] mkdir work_dir_path " << &work_dir_path[0] << " fail: " << utils::strErr() << log_.endl();
+      log_ << "[error] mkdir work_dir_path " << work_dir_path << " fail: " << utils::strErr() << log_.endl();
       return false;
     }
-    removeDir(&work_dir_path[0]);
+    removeDir(work_dir_path.c_str());
   }
 
   return true;
@@ -212,30 +213,28 @@ void JudgeWorker::getFileno(IOFileno& ioFileno,
                             uint32_t program_id,
                             uint32_t run_id,
                             uint32_t numofExecute) {
-  vector<char> file_path(50);
-  sprintf(&file_path[0], "%s/%d/%d.in",
-          program_dir_.c_str(),
-          program_id,
-          numofExecute);
-  log_ << &file_path[0] << log_.endl();
-  auto right_input_file = File::OpenFile(&file_path[0], O_RDONLY);
+  string file_path = (boost::format("%s/%d/%d.in") %
+                      program_dir_.c_str() %
+                      program_id %
+                      numofExecute).str();
+  log_ << file_path << log_.endl();
+  auto right_input_file = File::OpenFile(file_path.c_str(), O_RDONLY);
   ioFileno.right_input_fileno = right_input_file->fileno();
 
-
-  sprintf(&file_path[0], "%s/%d/%d.out",
-          program_dir_.c_str(),
-          program_id,
-          numofExecute);
-  log_ << &file_path[0] << log_.endl();
-  auto right_output_file = File::OpenFile(&file_path[0], O_RDONLY);
+  file_path = (boost::format("%s/%d/%d.out") %
+               program_dir_.c_str() %
+               program_id %
+               numofExecute).str();
+  log_ << file_path << log_.endl();
+  auto right_output_file = File::OpenFile(file_path.c_str(), O_RDONLY);
   ioFileno.right_output_fileno = right_output_file->fileno();
 
-  sprintf(&file_path[0], "%s/%d/%d.out",
-          temp_dir_.c_str(),
-          run_id,
-          numofExecute);
-  log_ << &file_path[0] << log_.endl();
-  auto user_output_file = File::CreateFile(&file_path[0], O_RDWR, 0666);
+  file_path = (boost::format("%s/%d/%d.out") %
+               temp_dir_.c_str() %
+               run_id %
+               numofExecute).str();
+  log_ << file_path << log_.endl();
+  auto user_output_file = File::CreateFile(file_path.c_str(), O_RDWR, 0666);
   ioFileno.user_output_fileno = user_output_file->fileno();
 
   file_manager_.push_back(right_input_file);
@@ -270,6 +269,7 @@ void JudgeWorker::wrapData(const Results &results, zmqmsg::ZmqMsg &smsg) {
   root["judge_result"] = judgeStringResult[results.judge_result];
   root["signum_result"] = results.signum_result;
   root["run_id"] = results.run_id;
+  root["compile_error"] = results.compile_error;
   string data = fast_writer.write(root);
 
   smsg.rebuild(data);

@@ -19,7 +19,6 @@ class JudgeCpp: public Judger
  protected:
   // virtual bool getCmdArgs(CmdArgs& cmd_args);
   virtual bool getCallLimit(CallLimit& call_limit);
- /* data */
 };
 }
 #endif

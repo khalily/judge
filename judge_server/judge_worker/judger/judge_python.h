@@ -19,7 +19,6 @@ class JudgePython: public Judger
 
   virtual bool getCmdArgs(CmdArgs& cmd_args);
   // virtual bool getCallLimit(CallLimit& call_limit);
- /* data */
 };
 }
 #endif

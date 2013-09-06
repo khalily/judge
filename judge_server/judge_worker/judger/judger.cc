@@ -11,7 +11,6 @@ namespace oj
 bool Judger::execute(const ExecuteCondtion &execute_condtion,
                      const IOFileno& ioFileno) {
 
-//   auto input_file = utils::File::OpenFile(input_file_path.c_str(), O_RDONLY);
   CmdArgs cmd_args;
   if (!getCmdArgs(cmd_args)) {
     log_ << "[error] getCmdArgs fail: " << utils::strErr() << log_.endl();
@@ -22,12 +21,12 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
     log_ << "[error] getCallLimit fail: " << utils::strErr() << log_.endl();
   }
 
-  // log_ << "user_output_fileno: " << ioFileno.user_output_fileno << log_.endl();
   Judge judge(execute_condtion,
               ioFileno,
               cmd_args,
               call_limit);
 
+  log_ << "[judge process] start judge ... " << log_.endl();
   switch(judge.Run()) {
 
     case kOk: {
@@ -67,7 +66,7 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
 }
 
 bool Judger::getCmdArgs(CmdArgs& cmd_args) {
-  cmd_args.push_back(&execute_file_path_[0]);
+  cmd_args.push_back(execute_file_path_.c_str());
   cmd_args.push_back(NULL);
   return true;
 }

@@ -8,11 +8,10 @@
 using namespace std;
 
 const string sock_front_addr = "tcp://0.0.0.0:7878";
-// const string sock_front_addr = "ipc://router.ipc";
-// const string sock_back_addr = "ipc://dealer.ipc";
-// const string sock_back_addr = "tcp://0.0.0.0:7979k";
-const string sock_back_addr = "inproc://dealer.inproc";
-const int worker_num = 10;
+
+// const string sock_back_addr = "inproc://dealer";
+const string sock_back_addr = "ipc://dealer.ipc";
+const int worker_num = 8;
 
 oj::MutexLock mutex;
 

@@ -29,7 +29,7 @@ class JudgeWorker
  private:
   bool init();
   bool buildEnv(uint32_t run_id,
-                std::vector<char>& work_dir_path);       //build environment
+                std::string& work_dir_path);       //build environment
 
   void cleanEnv(const char *work_dir_path) {
     removeDir(work_dir_path);

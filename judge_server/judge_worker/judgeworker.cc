@@ -65,7 +65,7 @@ void JudgeWorker::run() {
   }
   // InitCallLimit();
   // SyncToServer();
-
+  log_ << "start judge worker " << worker_number_ << " ... " << log_.endl();
   for (; ;) {
     zmqmsg::ZmqMsg rmsg;
     if (!rmsg.recvMsg(sock_worker_)) {

@@ -23,8 +23,24 @@ void* startWorker(void* args) {
   return (void*)0;
 }
 
+int daemon() {
+  int pid = fork();
+  if (pid < 0) return pid;
+  if (pid) {
+    cout<<"child pid: "<<pid<<endl;
+    exit(0);
+  }
+  setsid();
+  return 0;
+}
+
 int main(int argc, char const *argv[])
 {
+  if (argc > 1 && !strcmp(argv[1], "-d")) {
+    if (daemon() < 0)
+      cout << "create daemon fail" <<endl;
+  }
+
   auto judgeServer =
        oj::JudgeServer(sock_front_addr,
                        sock_back_addr,

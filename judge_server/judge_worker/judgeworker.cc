@@ -108,11 +108,13 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
                                     log_,
                                     run_configure.run_id);
   judger->storeSourceFile(run_configure.source_code,
-                          &work_dir_path[0]);
+                          work_dir_path.c_str());
 
   log_ << "storeSourceFile sucessful" << log_.endl();
   if (!judger->compile()) {
     results = judger->getResults();
+    cleanEnv(work_dir_path.c_str());
+    results.run_id = run_configure.run_id;
     log_ << "compile error" << log_.endl();
     return true;
   }
@@ -132,11 +134,13 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
     if (!judger->execute(execute_condtion,
                          ioFileno)) {
       log_ << "error start running ... " << log_.endl();
-      results = judger->getResults();
-      printResults(results);
-      results.run_id = run_configure.run_id;
-      file_manager_.closeAll();
-      return true;
+      // results = judger->getResults();
+      // printResults(results);
+      // results.run_id = run_configure.run_id;
+      // file_manager_.closeAll();
+      // cleanEnv(work_dir_path.c_str());
+      // return true;
+      break;
     }
     log_ << "execute one times ..." << log_.endl();
 
@@ -146,8 +150,8 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
   results = judger->getResults();
   results.run_id = run_configure.run_id;
   printResults(results);
-  cleanEnv(&work_dir_path[0]);
-  log_ << "cleanEnv " << &work_dir_path[0] << " sucessful" << log_.endl();
+  cleanEnv(work_dir_path.c_str());
+  log_ << "cleanEnv " << work_dir_path << " sucessful" << log_.endl();
   return true;
 }
 
@@ -281,6 +285,7 @@ void JudgeWorker::removeDir(const char *dir_path) {
 
   DIR *pdir = opendir(dir_path);
   if (pdir) {
+    // printf("why?\n");
     while ((pdirent = readdir(pdir)) != NULL) {
       if (pdirent->d_type == 8) {       // 8 dir
         sprintf(&subname[0], "%s/%s", dir_path, pdirent->d_name);

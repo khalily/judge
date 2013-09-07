@@ -18,7 +18,7 @@ class JudgePython: public Judger
                        const char* work_dir_path);
 
   virtual bool getCmdArgs(CmdArgs& cmd_args);
-  // virtual bool getCallLimit(CallLimit& call_limit);
+  virtual bool getCallLimit(CallLimit& call_limit);
 };
 }
 #endif

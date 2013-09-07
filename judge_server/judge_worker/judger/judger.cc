@@ -35,8 +35,9 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
       // log_ << "[judge process] judge result: " << results_.judge_result << log_.endl();
       log_ << "[judge process] execute finish, start check ... " << log_.endl();
       Checker checker(ioFileno.user_output_fileno,
-                      ioFileno.right_output_fileno);
-      if (checker.Run() == kError) {
+                      ioFileno.right_output_fileno,
+                      log_);
+      if (checker.run() == kError) {
         results_.judge_result = checker.get_result();
         // log_ << "[judge process] checker result: " << results_.judge_result << log_.endl();
         return false;
@@ -46,8 +47,9 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
     }
     case kError: {
       Checker checker(ioFileno.user_output_fileno,
-                      ioFileno.right_output_fileno);
-      if (checker.Run() == kError) {
+                      ioFileno.right_output_fileno,
+                      log_);
+      if (checker.run() == kError) {
         results_.judge_result = checker.get_result();
         // log_ << "[judge process] checker result: " << results_.judge_result << log_.endl();
         return false;

@@ -11,7 +11,7 @@ const string sock_front_addr = "tcp://0.0.0.0:7878";
 
 // const string sock_back_addr = "inproc://dealer";
 const string sock_back_addr = "ipc://dealer.ipc";
-const int worker_num = 8;
+const int worker_num = 1;
 
 oj::MutexLock mutex;
 

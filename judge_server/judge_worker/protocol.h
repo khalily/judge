@@ -193,9 +193,8 @@ class File {
     return fd_;
   }
   ~File() {
-    // printf("close fd\n");
     close(fd_);
-    printf("close fd: %s %s\n", filepath_.c_str(), strerror(errno));
+    // printf("close fd: %s %s\n", filepath_.c_str(), strerror(errno));
   }
 
  private:
@@ -211,7 +210,6 @@ class File {
     }
     filepath_ = filepath;
   }
-  // const char * filepath_;
   std::string filepath_;
   int fd_;
 };
@@ -232,7 +230,7 @@ class FileManger : public std::vector<File*> {
 
   void closeAll() {
     if (!isClosed) {
-      printf("closeAll\n");
+      // printf("closeAll\n");
       for (auto iter = begin(); iter != end(); ++iter) {
         delete *iter;
       }

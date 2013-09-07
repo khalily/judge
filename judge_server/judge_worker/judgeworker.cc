@@ -41,9 +41,10 @@ void printResults(const Results& results) {
        << "run_id: \t\t"        << results.run_id         << endl;
 }
 
-JudgeWorker::JudgeWorker(const std::string& sock_back_addr) :
+JudgeWorker::JudgeWorker(const std::string& sock_back_addr,
+                         void* context) :
     sock_back_addr_(sock_back_addr),
-    context_(NULL),
+    context_(context),
     sock_worker_(NULL),
     worker_number_(0) {
       temp_dir_ = "/tmp/oj";
@@ -79,7 +80,7 @@ void JudgeWorker::run() {
 
     log_ << "processTask finish: " << log_.endl();
 
-    printResults(results);
+    // printResults(results);
 
     zmqmsg::ZmqMsg smsg;
     wrapData(results, smsg);
@@ -134,22 +135,16 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
     if (!judger->execute(execute_condtion,
                          ioFileno)) {
       log_ << "error start running ... " << log_.endl();
-      // results = judger->getResults();
-      // printResults(results);
-      // results.run_id = run_configure.run_id;
-      // file_manager_.closeAll();
-      // cleanEnv(work_dir_path.c_str());
-      // return true;
+
       break;
     }
     log_ << "execute one times ..." << log_.endl();
 
-    // log_ << "file_manager_: " << file_manager_.size() << log_.endl();
     file_manager_.closeAll();
   }
   results = judger->getResults();
   results.run_id = run_configure.run_id;
-  printResults(results);
+  // printResults(results);
   cleanEnv(work_dir_path.c_str());
   log_ << "cleanEnv " << work_dir_path << " sucessful" << log_.endl();
   return true;
@@ -162,15 +157,11 @@ bool JudgeWorker::init() {
   log_.setPrefix(&prefix[0]);
   log_.setMutex(&mutex);
 
-  if (!log_.setLog(std::cout)) {
+  if (!log_.setLog(log_path_.c_str())) {
     log_ << "[error] setLog fail: " << utils::strErr() << log_.endl();
     return false;
   }
 
-  if (NULL == (context_ = zmq_init(1))) {
-    log_ << "[error] create context fail: " << zmqmsg::strErr() << log_.endl();
-    return false;
-  }
   if (NULL == (sock_worker_ = zmq_socket(context_, ZMQ_REP))) {
     log_ << "[error] create worker socket fail: " << zmqmsg::strErr() << log_.endl();
     return false;

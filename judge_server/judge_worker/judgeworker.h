@@ -12,7 +12,8 @@ namespace oj
 class JudgeWorker
 {
  public:
-  JudgeWorker(const std::string& sock_back_addr);
+  JudgeWorker(const std::string& sock_back_addr,
+              void* context);
   ~JudgeWorker() { }
   void setTmpDir(const std::string& tmp_dir) {
     temp_dir_ = tmp_dir;
@@ -24,6 +25,10 @@ class JudgeWorker
 
   void setWorkerNum(int num) {
     worker_number_ = num;
+  }
+
+  void setLogPath(const std::string& log_path) {
+    log_path_ = log_path;
   }
 
  private:
@@ -86,6 +91,7 @@ class JudgeWorker
 
   std::string temp_dir_;
   std::string program_dir_;
+  std::string log_path_;
 
   int worker_number_;
 

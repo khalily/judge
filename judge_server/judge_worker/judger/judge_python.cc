@@ -26,4 +26,9 @@ bool JudgePython::getCmdArgs(CmdArgs& cmd_args) {
   return true;
 }
 
+bool JudgePython::getCallLimit(CallLimit& call_limit) {
+  call_limit = call_limit_list[kTypePython];
+  return true;
+}
+
 }

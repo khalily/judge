@@ -18,10 +18,10 @@ class Judger
       log_(log)
       {
         results_.run_id = run_id;
-        source_file_path_.reserve(15);
-        execute_file_path_.reserve(15);
-        compile_error_file_.reserve(15);
-        vec_cmd_.reserve(15);
+        // source_file_path_.reserve(15);
+        // execute_file_path_.reserve(15);
+        // compile_error_file_.reserve(15);
+        // vec_cmd_.reserve(15);
       }
   virtual ~Judger() { }
 
@@ -73,7 +73,7 @@ class Judger
 
   std::string execute_file_path_;
   std::string compile_error_file_;
-  std::string vec_cmd_;
+  // std::string vec_cmd_;
   std::string user_output_file_;
   std::string right_output_file_;
   Results results_;

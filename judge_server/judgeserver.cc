@@ -14,20 +14,19 @@ namespace oj {
 
 JudgeServer::JudgeServer(const string& sock_front_addr,
                          const string& sock_back_addr,
-                         int worker_num) :
+                         void* context) :
     sock_front_addr_(sock_front_addr),
     sock_back_addr_(sock_back_addr),
-    worker_num_(worker_num),
-    context_(NULL),
+    context_(context),
     sock_front_(NULL),
     sock_back_(NULL) {
 
     }
 
 JudgeServer::~JudgeServer() {
-  for (auto worker: workers_) {
-    delete worker;
-  }
+  // for (auto worker: workers_) {
+  //   delete worker;
+  // }
   destroy();
 }
 
@@ -35,15 +34,15 @@ bool JudgeServer::init() {
   log_.setPrefix("JudgeServer");
   log_.setMutex(&mutex);
 
-  if (!log_.setLog(std::cout)) {
+  if (!log_.setLog(log_path_.c_str())) {
     log_ << "[error] setLog fail: " << utils::strErr() << log_.endl();
     return false;
   }
 
-  if (NULL == (context_ = zmq_init(1))) {
-    log_ << "[error] create context fail: " << zmqmsg::strErr() << log_.endl();
-    return false;
-  }
+  // if (NULL == (context_ = zmq_init(1))) {
+  //   log_ << "[error] create context fail: " << zmqmsg::strErr() << log_.endl();
+  //   return false;
+  // }
   if (NULL == (sock_front_ = zmq_socket(context_, ZMQ_ROUTER))) {
     log_ << "[error] create front socket fail: " << zmqmsg::strErr() << log_.endl();
     return false;
@@ -80,7 +79,6 @@ void JudgeServer::run() {
     log_ << "[error] init fail: " <<log_.endl();
     return;
   }
-  // startWorker();
 
   zmq_pollitem_t items[] = {
     {sock_front_, 0, ZMQ_POLLIN, 0},

@@ -193,9 +193,8 @@ class File {
     return fd_;
   }
   ~File() {
-    printf("close fd\n");
     close(fd_);
-    printf("%s\n", strerror(errno));
+    // printf("close fd: %s %s\n", filepath_.c_str(), strerror(errno));
   }
 
  private:
@@ -203,32 +202,44 @@ class File {
     if ((fd_ = open(filepath, oflag)) < 0) {
       printError("open file error");
     }
+    filepath_ = filepath;
   }
   File(const char* filepath, int oflag, mode_t mode) {
     if ((fd_ = open(filepath, O_CREAT | oflag, mode)) < 0) {
       printError("create file error");
     }
+    filepath_ = filepath;
   }
-
+  std::string filepath_;
   int fd_;
 };
 
 class FileManger : public std::vector<File*> {
  public:
-  FileManger()
+  FileManger() :
+      isClosed(true)
        { }
   virtual ~FileManger() {
-      closeAll();
+    closeAll();
+  }
+  virtual void push_back (File*& val) {
+    std::vector<File*>::push_back(val);
+    // ((std::vector<File*>*)(this))->push_back(val);
+    isClosed = false;
   }
 
   void closeAll() {
-    printf("closeAll\n");
+    if (!isClosed) {
+      // printf("closeAll\n");
       for (auto iter = begin(); iter != end(); ++iter) {
         delete *iter;
       }
       clear();
+      isClosed = true;
+    }
   }
  private:
+  bool isClosed;
 };
 
 

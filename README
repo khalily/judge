@@ -58,7 +58,7 @@ installation steps
 
 
     // install judgeServer
-    cd newJudge
+    cd newjudge
     mkdir build && cd build
     cmake ../judgeServer
     make

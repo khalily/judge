@@ -15,6 +15,7 @@ tools
     1. cmake
     2. g++
 
+
 installation steps
 ------------------
 
@@ -61,6 +62,33 @@ installation steps
     mkdir build && cd build
     cmake ../judgeServer
     make
+
+
+instruction
+------------
+
+    ./judgeServer ../judgeServer/judge.conf
+
+
+default configure
+--------------
+
+    {
+      "iothreads": 4,
+      "worker_nums": 8,
+      "daemon": true,
+
+      "sock_front_addr": "tcp://0.0.0.0:7878",
+      // "sock_back_addr": "ipc://dealer.ipc",
+      "sock_back_addr": "inproc://dealer",
+
+      "tmp_dir": "/tmp/oj",
+      "program_dir": "/oj/program",
+      "log_path": "/var/log/oj/judge.log",
+
+      "judge_server_prefix": "JudgeServer",
+      "judge_worker_prefix": "JudgeWorker",
+    }
 
 
 

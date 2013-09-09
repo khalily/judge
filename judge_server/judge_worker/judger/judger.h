@@ -13,9 +13,6 @@
 
 namespace oj{
 
-// typedef std::set<int> CallLimit;
-
-// extern std::map<uint32_t, CallLimit> call_limit_list;
 
 class Judger
 {
@@ -24,11 +21,6 @@ class Judger
       log_(log),
       execute_condtion_(execute_condtion)
       {
-        // results_.run_id = run_id;
-        // source_file_path_.reserve(15);
-        // execute_file_path_.reserve(15);
-        // compile_error_file_.reserve(15);
-        // vec_cmd_.reserve(15);
       }
   virtual ~Judger() { }
 

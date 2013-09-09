@@ -24,6 +24,28 @@ bool JudgePython::execute(const IOFileno& ioFileno) {
   return Judger::execute(ioFileno);
 }
 
+bool JudgePython::compile() {
+
+  string cmds = (boost::format("python -m py_compile %s 2> %s")
+                 % source_file_path_
+                 // % execute_file_path_
+                 % compile_error_file_).str();
+  if (system(cmds.c_str()) == -1) {
+    log_ << "[error] compile fail: " << utils::strErr() << log_.endl();
+    results_.judge_result = kSE;
+    return false;
+  }
+
+  if (hasData(compile_error_file_.c_str())) {
+    vector<char> data(50);
+    readFromFile(compile_error_file_.c_str(), data);
+    results_.compile_error.assign(&data[0], data.size());
+    results_.judge_result = kCE;
+    return false;
+  }
+  return true;
+}
+
 bool JudgePython::getCmdArgs(CmdArgs& cmd_args) {
   cmd_args.push_back("python");
   cmd_args.push_back(execute_file_path_.c_str());

@@ -18,7 +18,7 @@ class JudgePython: public Judger
                        const char* work_dir_path);
 
   virtual bool execute(const IOFileno& ioFileno);
-
+  virtual bool compile();
   virtual bool getCmdArgs(CmdArgs& cmd_args);
   virtual bool getCallLimit(CallLimit& call_limit);
 };

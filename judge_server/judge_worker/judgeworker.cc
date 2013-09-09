@@ -210,7 +210,7 @@ void JudgeWorker::getFileno(IOFileno& ioFileno,
                             uint32_t program_id,
                             uint32_t run_id,
                             uint32_t numofExecute) {
-  string file_path = (boost::format("%s/%d/%d.in") %
+  string file_path = (boost::format("%s/%d/in/%d") %
                       program_dir_.c_str() %
                       program_id %
                       numofExecute).str();
@@ -218,7 +218,7 @@ void JudgeWorker::getFileno(IOFileno& ioFileno,
   auto right_input_file = File::OpenFile(file_path.c_str(), O_RDONLY);
   ioFileno.right_input_fileno = right_input_file->fileno();
 
-  file_path = (boost::format("%s/%d/%d.out") %
+  file_path = (boost::format("%s/%d/out/%d") %
                program_dir_.c_str() %
                program_id %
                numofExecute).str();

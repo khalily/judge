@@ -6,6 +6,7 @@
 #include "judge_cpp.h"
 #include "judge_python.h"
 #include "judge_java.h"
+#include "judge_ruby.hpp"
 #include "../protocol.h"
 
 namespace oj
@@ -40,7 +41,11 @@ public:
       case kTypeJava:
         judger_ = new JudgeJava(log, execute_condtion);
         break;
+       case kTypeRuby:
+        judger_ = new JudgeRuby(log, execute_condtion);
+        break;
       default:
+        return NULL;
         break;
     }
     isConstruct_ = true;

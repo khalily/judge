@@ -113,10 +113,14 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
   };
 
   JudgeofType judgeoftype;
-  Judger *judger =
-        judgeoftype.constructJudger(run_configure.code_type,
+  Judger* judger;
+  if (NULL == (judger = judgeoftype.constructJudger(
+                                    run_configure.code_type,
                                     log_,
-                                    execute_condtion);
+                                    execute_condtion))) {
+    log_ << "constructJudger fail" << log_.endl();
+    return false;
+  }
   judger->storeSourceFile(run_configure.source_code,
                           work_dir_path.c_str());
 

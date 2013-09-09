@@ -4,6 +4,7 @@
 #include "stdint.h"
 #include <string>
 
+#include "call_limit.hpp"
 #include "../protocol.h"
 
 namespace oj {

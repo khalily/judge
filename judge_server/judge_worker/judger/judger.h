@@ -4,12 +4,18 @@
 #include <fstream>
 #include <string>
 // #include <vector>
+#include <set>
 #include <boost/format.hpp>
 
 #include "../../log.hpp"
 #include "../protocol.h"
+#include "call_limit.hpp"
 
 namespace oj{
+
+// typedef std::set<int> CallLimit;
+
+// extern std::map<uint32_t, CallLimit> call_limit_list;
 
 class Judger
 {

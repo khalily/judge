@@ -26,7 +26,7 @@ class Request(object):
 def requestOnce(codetype, filepath, run_id):
     json_data = {
         'time_limit': 1000, # MS
-        'program_id': 1,
+        'program_id': 15,
         'code_type': codetype,
         'source_code': 'only test',
         'run_times': 3,
@@ -79,6 +79,10 @@ if __name__ == '__main__':
                 kTypeCpp,
                 kTypePython,
                 kTypeJava,
+                kTypePascal,
+                kTypeBash,
+                kTypePerl,
+                kTypeRuby
                 kTypeUnknown,
               };'''
     elif len(sys.argv) == 3:

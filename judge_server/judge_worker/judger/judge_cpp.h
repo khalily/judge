@@ -9,8 +9,8 @@ namespace oj
 class JudgeCpp: public Judger
 {
  public:
-  JudgeCpp(utils::Log& log, uint32_t run_id) :
-      Judger(log, run_id) { }
+  JudgeCpp(utils::Log& log, ExecuteCondtion& execute_condtion) :
+      Judger(log, execute_condtion) { }
   ~JudgeCpp() { }
   virtual void storeSourceFile(const std::string& source_code,
                        // uint32_t code_type,

@@ -13,6 +13,8 @@ class Judge {
 
  public:
 
+  // Judge() {}
+
   Judge(const ExecuteCondtion& execute_condtion,
         const IOFileno& ioFileno,
         const CmdArgs& cmd_args,

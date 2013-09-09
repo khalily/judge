@@ -104,11 +104,19 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
   }
   log_ << "buildEnv " << work_dir_path << " sucessful" << log_.endl();
 
+  ExecuteCondtion execute_condtion {
+    run_configure.time_limit,
+    run_configure.memory_limit,
+    run_configure.runer,
+    run_configure.trace,
+    0                          // memory_add
+  };
+
   JudgeofType judgeoftype;
   Judger *judger =
         judgeoftype.constructJudger(run_configure.code_type,
                                     log_,
-                                    run_configure.run_id);
+                                    execute_condtion);
   judger->storeSourceFile(run_configure.source_code,
                           work_dir_path.c_str());
 
@@ -120,12 +128,7 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
     log_ << "compile error" << log_.endl();
     return true;
   }
-  ExecuteCondtion execute_condtion {
-    run_configure.time_limit,
-    run_configure.memory_limit,
-    run_configure.runer,
-    run_configure.trace
-  };
+
   log_ << "start execute ..." << log_.endl();
   IOFileno ioFileno;
   for (int num = 0; num != run_configure.run_times; ++num) {
@@ -133,8 +136,7 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
               run_configure.program_id,
               run_configure.run_id,
               num);
-    if (!judger->execute(execute_condtion,
-                         ioFileno)) {
+    if (!judger->execute(ioFileno)) {
       // log_ << "error start running ... " << log_.endl();
 
       break;

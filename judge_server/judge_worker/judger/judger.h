@@ -14,10 +14,11 @@ namespace oj{
 class Judger
 {
  public:
-  Judger(utils::Log& log, uint32_t run_id) :
-      log_(log)
+  Judger(utils::Log& log, ExecuteCondtion& execute_condtion) :
+      log_(log),
+      execute_condtion_(execute_condtion)
       {
-        results_.run_id = run_id;
+        // results_.run_id = run_id;
         // source_file_path_.reserve(15);
         // execute_file_path_.reserve(15);
         // compile_error_file_.reserve(15);
@@ -31,8 +32,7 @@ class Judger
   virtual bool compile() {
     return true;
   }
-  bool execute(const ExecuteCondtion& execute_condtion,
-               const IOFileno& ioFileno);
+  virtual bool execute(const IOFileno& ioFileno);
 
   Results getResults() {
     return results_;
@@ -78,6 +78,7 @@ class Judger
   std::string right_output_file_;
   Results results_;
   utils::Log &log_;
+  ExecuteCondtion& execute_condtion_;
 };
 }
 #endif

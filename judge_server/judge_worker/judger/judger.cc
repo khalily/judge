@@ -8,8 +8,7 @@ using namespace std;
 namespace oj
 {
 
-bool Judger::execute(const ExecuteCondtion &execute_condtion,
-                     const IOFileno& ioFileno) {
+bool Judger::execute(const IOFileno& ioFileno) {
 
   CmdArgs cmd_args;
   if (!getCmdArgs(cmd_args)) {
@@ -21,7 +20,7 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
     log_ << "[error] getCallLimit fail: " << utils::strErr() << log_.endl();
   }
 
-  Judge judge(execute_condtion,
+  Judge judge(execute_condtion_,
               ioFileno,
               cmd_args,
               call_limit);
@@ -32,7 +31,7 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
     case kOk: {
       results_ = judge.get_results();
 
-      // log_ << "[judge process] judge result: " << results_.judge_result << log_.endl();
+      log_ << "[judge process] judge result: " << results_.judge_result << log_.endl();
       log_ << "[judge process] execute finish, start check ... " << log_.endl();
       Checker checker(ioFileno.user_output_fileno,
                       ioFileno.right_output_fileno,
@@ -46,14 +45,14 @@ bool Judger::execute(const ExecuteCondtion &execute_condtion,
       return true;
     }
     case kError: {
-      Checker checker(ioFileno.user_output_fileno,
-                      ioFileno.right_output_fileno,
-                      log_);
-      if (checker.run() == kError) {
-        results_.judge_result = checker.get_result();
-        // log_ << "[judge process] checker result: " << results_.judge_result << log_.endl();
-        return false;
-      }
+      // Checker checker(ioFileno.user_output_fileno,
+      //                 ioFileno.right_output_fileno,
+      //                 log_);
+      // if (checker.run() == kError) {
+      //   results_.judge_result = checker.get_result();
+      //   // log_ << "[judge process] checker result: " << results_.judge_result << log_.endl();
+      //   return false;
+      // }
       results_ = judge.get_results();
       // log_ << "[judge process] judge result: " << results_.judge_result << log_.endl();
       log_ << "[judge process] execute interrupt ... " << log_.endl();

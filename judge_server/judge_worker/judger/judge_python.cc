@@ -19,6 +19,11 @@ void JudgePython::storeSourceFile(const std::string &source_code,
   writeToFile(source_code);
 }
 
+bool JudgePython::execute(const IOFileno& ioFileno) {
+  execute_condtion_.memory_add = 1024 * 2;
+  return Judger::execute(ioFileno);
+}
+
 bool JudgePython::getCmdArgs(CmdArgs& cmd_args) {
   cmd_args.push_back("python");
   cmd_args.push_back(execute_file_path_.c_str());

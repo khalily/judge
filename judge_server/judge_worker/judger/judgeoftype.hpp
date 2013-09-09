@@ -25,20 +25,20 @@ public:
     }
   }
   Judger* constructJudger(uint32_t code_type,
-                          utils::Log& log,
-                          uint32_t run_id) {
+                          utils::Log &log,
+                          ExecuteCondtion& execute_condtion) {
     switch (code_type) {
       case kTypeC:
-        judger_ = new JudgeC(log, run_id);
+        judger_ = new JudgeC(log, execute_condtion);
         break;
       case kTypeCpp:
-        judger_ = new JudgeCpp(log, run_id);
+        judger_ = new JudgeCpp(log, execute_condtion);
         break;
       case kTypePython:
-        judger_ = new JudgePython(log, run_id);
+        judger_ = new JudgePython(log, execute_condtion);
         break;
       case kTypeJava:
-        judger_ = new JudgeJava(log, run_id);
+        judger_ = new JudgeJava(log, execute_condtion);
         break;
       default:
         break;

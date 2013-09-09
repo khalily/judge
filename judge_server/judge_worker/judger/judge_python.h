@@ -9,13 +9,15 @@ namespace oj
 class JudgePython: public Judger
 {
  public:
-  JudgePython(utils::Log& log, uint32_t run_id) :
-    Judger(log, run_id) { }
+  JudgePython(utils::Log& log, ExecuteCondtion& execute_condtion) :
+      Judger(log, execute_condtion) { }
   ~JudgePython() { }
 
   virtual void storeSourceFile(const std::string& source_code,
                        // uint32_t code_type,
                        const char* work_dir_path);
+
+  virtual bool execute(const IOFileno& ioFileno);
 
   virtual bool getCmdArgs(CmdArgs& cmd_args);
   virtual bool getCallLimit(CallLimit& call_limit);

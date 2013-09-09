@@ -32,8 +32,8 @@ def requestOnce(codetype, filepath, run_id):
         'run_times': 3,
         'memory_limit': 40000, # KB
         'run_id': run_id,
-        'trace': False,
-	'runner': 1000
+        'trace': True,
+    	'runner': 1000
         # 'currentTime':
     }
 

@@ -27,6 +27,7 @@ bool JudgeCpp::compile() {
                  % compile_error_file_).str();
   if (system(cmds.c_str()) == -1) {
     log_ << "[error] compile fail: " << utils::strErr() << log_.endl();
+    results_.judge_result = kSE;
     return false;
   }
 
@@ -34,6 +35,7 @@ bool JudgeCpp::compile() {
     vector<char> data(50);
     readFromFile(compile_error_file_.c_str(), data);
     results_.compile_error.assign(&data[0], data.size());
+    results_.judge_result = kCE;
     return false;
   }
   return true;

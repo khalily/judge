@@ -47,26 +47,12 @@ class JudgeWorker
                  uint32_t run_id,
                  uint32_t numofExecute);
 
-  void preProcess(const RunPath& run_path,
-                uint32_t code_type,
-                std::vector<const char*> &cmd_args);
-
   bool processTask(const zmqmsg::ZmqMsg& msg,
                    Results& results);
 
   bool sendError(const zmqmsg::ZmqMsg& msg);
   bool sendResults(const zmqmsg::ZmqMsg& msg);
 
-  ReturnCode judgeOnce(const RunConfigure &run_configure,
-                       const std::vector<const char*> &cmd_args,
-                       RunPath &run_path,
-                       Results &results,
-                       // FileList &user_output_list,
-                       // FileList &right_output_list,
-                       // FileList &input_list,
-                       uint32_t times);
-  // void InitCallLimit();
-  // void ReadFromFile(std::vector<char> &data);
   void writeToFile(const std::string &source_code,
                    const char *source_code_path);
 

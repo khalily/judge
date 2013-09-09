@@ -7,17 +7,17 @@
 
 #include <string>
 #include <iostream>
+#include <thread>
+#include <mutex>
 
 #include <zmq.h>
 
 #include "judge_worker/judgeworker.h"
-#include "thread.hpp"
 #include "configure.hpp"
 
 using namespace std;
 
-oj::MutexLock mutex;
-
+std::mutex mutex;
 
 struct WorkerConf
 {
@@ -38,8 +38,7 @@ struct ServerConf
   string judge_server_prefix;
 };
 
-void* startWorker(void* args) {
-  auto worker_conf = *((WorkerConf*)args);
+void startWorker(const WorkerConf& worker_conf) {
   oj::JudgeWorker judgeWorker(worker_conf.sock_back_addr,
                               worker_conf.context);
   judgeWorker.setWorkerNum(worker_conf.num);
@@ -48,11 +47,9 @@ void* startWorker(void* args) {
   judgeWorker.setLogPath(worker_conf.log_path);
 
   judgeWorker.run();
-  return (void*)0;
 }
 
-void* startServer(void* args) {
-  auto server_conf = *((ServerConf*)args);
+void startServer(const ServerConf& server_conf) {
   auto judgeServer =
        oj::JudgeServer(server_conf.sock_front_addr,
                        server_conf.sock_back_addr,
@@ -60,8 +57,6 @@ void* startServer(void* args) {
 
   judgeServer.setLogPath(server_conf.log_path);
   judgeServer.run();
-
-  return (void*)0;
 }
 
 void closeStdin() {
@@ -149,17 +144,18 @@ int main(int argc, char const *argv[])
     0,
   };
 
-  pthread_t tid;
-  pthread_create(&tid, NULL, startServer, &server_conf);
+  vector<thread> threads;
+  threads.push_back(thread(startServer, ref(server_conf)));
 
   sleep(2);
   for (int num = 0; num != conf.worker_nums; ++num) {
     worker_conf.num = num;
-    pthread_t tid;
-    pthread_create(&tid, NULL, startWorker, &worker_conf);
+    threads.push_back(thread(startWorker, ref(worker_conf)));
   }
-  // judgeServer.run();
-  pthread_join(tid, NULL);
+
+  for (auto& thread: threads) {
+    thread.join();
+  }
 
   return 0;
 }

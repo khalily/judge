@@ -1,10 +1,9 @@
 #ifndef _OJ_JUDGESERVER_H
 #define _OJ_JUDGESERVER_H
 
-// #include <zmq.h>
+
 #include <string>
 #include <vector>
-#include "thread.hpp"
 #include "log.hpp"
 
 namespace oj
@@ -34,9 +33,6 @@ class JudgeServer
   utils::Log log_;
 
   std::string log_path_;
-
-  ThreadPool threadPool_;
-  std::vector<JudgeWorker*> workers_;
 };
 }
 #endif

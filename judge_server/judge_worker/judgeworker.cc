@@ -5,6 +5,7 @@
 #include <string.h>
 #include <iostream>             // test
 #include <fstream>
+#include <mutex>
 #include <vector>
 
 #include <boost/format.hpp>
@@ -20,7 +21,7 @@
 
 using namespace std;
 
-extern oj::MutexLock mutex;
+extern std::mutex mutex;
 
 namespace oj {
 
@@ -134,7 +135,7 @@ bool JudgeWorker::processTask(const zmqmsg::ZmqMsg& msg,
               num);
     if (!judger->execute(execute_condtion,
                          ioFileno)) {
-      log_ << "error start running ... " << log_.endl();
+      // log_ << "error start running ... " << log_.endl();
 
       break;
     }
@@ -155,7 +156,6 @@ bool JudgeWorker::init() {
   vector<char> prefix(20);
   sprintf(&prefix[0], "JudgeWorker %d", worker_number_);
   log_.setPrefix(&prefix[0]);
-  log_.setMutex(&mutex);
 
   if (!log_.setLog(log_path_.c_str())) {
     log_ << "[error] setLog fail: " << utils::strErr() << log_.endl();

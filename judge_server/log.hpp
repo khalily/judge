@@ -4,8 +4,9 @@
 #include <fstream>
 #include <functional>
 #include <string.h>
-#include "thread.hpp"
+#include <mutex>
 
+extern std::mutex mutex;
 namespace utils
 {
 
@@ -24,7 +25,6 @@ class Log
       isTimePrefix_(true),
       prefix_(NULL),
       out_(NULL),
-      mutex_(NULL),
       isLock_(false) { }
 
   ~Log() {
@@ -51,9 +51,10 @@ class Log
     return true;
   }
 
-  void setMutex(oj::MutexLock *mutex) {
-    mutex_ = mutex;
-  }
+  // void setMutex(oj::MutexLock *mutex) {
+  // void setMutex(std::mutex mutex) {
+  //   mutex_ = mutex;
+  // }
 
   void setPrefix(const char* prefix) {
 
@@ -78,7 +79,7 @@ class Log
 
   void lockofLog() {
     if (!isLock()) {
-      mutex_->lock();
+      mutex.lock();
       isLock_ = true;
     }
   }
@@ -86,7 +87,7 @@ class Log
   void unLockofLog() {
     if (isLock()) {
       isLock_ = false;
-      mutex_->unlock();
+      mutex.unlock();
     }
   }
 
@@ -138,7 +139,8 @@ class Log
   bool isTimePrefix_;
   char * prefix_;
   std::ostream *out_;
-  oj::MutexLock *mutex_;
+  // oj::MutexLock *mutex_;
+  // std::mutex mutex_;
   bool isLock_;
 };
 

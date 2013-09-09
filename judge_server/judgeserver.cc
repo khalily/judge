@@ -1,6 +1,5 @@
 #include "judgeserver.h"
 
-#include <functional>
 #include <zmq.h>
 
 #include "zmqmsg/zmqmsg.h"
@@ -8,7 +7,7 @@
 
 using namespace std;
 
-extern oj::MutexLock mutex;
+extern std::mutex mutex;
 
 namespace oj {
 
@@ -24,15 +23,11 @@ JudgeServer::JudgeServer(const string& sock_front_addr,
     }
 
 JudgeServer::~JudgeServer() {
-  // for (auto worker: workers_) {
-  //   delete worker;
-  // }
   destroy();
 }
 
 bool JudgeServer::init() {
   log_.setPrefix("JudgeServer");
-  log_.setMutex(&mutex);
 
   if (!log_.setLog(log_path_.c_str())) {
     log_ << "[error] setLog fail: " << utils::strErr() << log_.endl();

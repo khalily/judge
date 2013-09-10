@@ -77,6 +77,8 @@ void JudgeWorker::run() {
     Results results;
     if (!processTask(rmsg, results)) {
       log_ << "[error] processTask fail: " << utils::strErr() << log_.endl();
+      sendError(results);
+      return;
     }
 
     log_ << "processTask finish: " << log_.endl();
@@ -87,8 +89,18 @@ void JudgeWorker::run() {
     wrapData(results, smsg);
     if (!smsg.sendMsg(sock_worker_)) {
       log_ << "[error] send to client fail: " << zmqmsg::strErr() << log_.endl();
+      return;
     }
 
+  }
+}
+
+void JudgeWorker::sendError(Results& results) {
+  results.judge_result = kSE;
+  zmqmsg::ZmqMsg smsg;
+  wrapData(results, smsg);
+  if (!smsg.sendMsg(sock_worker_)) {
+      log_ << "[error] send to client fail: " << zmqmsg::strErr() << log_.endl();
   }
 }
 

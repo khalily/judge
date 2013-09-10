@@ -50,8 +50,8 @@ class JudgeWorker
   bool processTask(const zmqmsg::ZmqMsg& msg,
                    Results& results);
 
-  bool sendError(const zmqmsg::ZmqMsg& msg);
-  bool sendResults(const zmqmsg::ZmqMsg& msg);
+  void sendError(Results& results);
+  bool sendResults(Results& results);
 
   void writeToFile(const std::string &source_code,
                    const char *source_code_path);

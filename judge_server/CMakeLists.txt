@@ -9,6 +9,7 @@ message(STATUS "This is SOURCE dir " ${PROJECT_SOURCE_DIR})
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/judge_worker)
 add_subdirectory(${PROJECT_SOURCE_DIR}/zmqmsg)
+add_subdirectory(${PROJECT_SOURCE_DIR}/reboot_server)
 #add_subdirectory(${PROJECT_SOURCE_DIR}/test)
 add_subdirectory(${PROJECT_SOURCE_DIR}/judge_worker/judger)
 add_executable(judgeServer main.cc judgeserver.cc)

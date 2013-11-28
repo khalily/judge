@@ -30,6 +30,8 @@ void JudgeRuby::storeSourceFile(const std::string &source_code,
   execute_file_path_ = (boost::format("%s/main.rb") % work_dir_path).str();
 
   compile_error_file_ = (boost::format("%s/error_info") % work_dir_path).str();
+    compile_error_file_:
+  compile_error_file_ = (boost::format("%s/error_info") % work_dir_path).str();
 
   writeToFile(source_code);
 }

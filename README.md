@@ -60,14 +60,14 @@ installation steps
     // install judgeServer
     cd newjudge
     mkdir build && cd build
-    cmake ../judgeServer
+    cmake ../judge-server
     make
 
 
 instruction
 ------------
 
-    ./judgeServer ../judgeServer/judge.conf
+    ./judgeServer ../judge-server/judge.conf
 
 
 default configure
